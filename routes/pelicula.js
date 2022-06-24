@@ -9,6 +9,7 @@ import {validarJWT} from "../middlewares/validar.js"
 const router=new Router()
 
 router.post('/',[
+    validarJWT,
     check('tituloOriginal','el campo titulo no puede estar vacio').not().isEmpty(),
     check('tituloOriginal','el campo titulo debe tener minimo 2 caracteres').isLength({max:50}),
     check('tituloEspanol','el campo titulo en español no puede estar vacio').not().isEmpty(),
@@ -32,13 +33,19 @@ router.post('/',[
     validarCampos
 ],peliculaPost)
 
-router.get('/get',peliculaGet)
+router.get('/get',[
+    validarCampos
+],peliculaGet)
+
 router.get('/ID',[
     check('id').custom(helpersPelicula.peliculasId),
     validarCampos
 ],peliculaGetId)
 
-router.get('/Delete',peliculaDelate)
+router.get('/Delete',[
+    validarJWT,
+    validarCampos
+],peliculaDelate)
 
 router.get('/Nombre',[
     

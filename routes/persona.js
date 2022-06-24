@@ -1,6 +1,6 @@
 import {Router} from "express"
 import { check } from "express-validator"
-import {personaPost,personaLogin,personaDelete,personaput,personaGetId,personaActivar,personaDesactivar,personaMostar} from "../controllers/persona.js"
+import {personaPost,personaLogin,personaDelete,personaput,personaGetId,personaActivar,personaDesactivar,personaMostar,cargarImagen} from "../controllers/persona.js"
 import { validarCampos } from "../middlewares/middleware.js"
 import helpersUsuarios from "../helpers/persona.js"
 import { validarJWT } from "../middlewares/validar.js"
@@ -18,15 +18,16 @@ router.post('/',[
     check('apellido').not().isEmpty(),
     check('apellido').isLength({max:20}),
     check('edad').not().isEmpty(),
-    check('foto').isLength({min:5}),
     validarCampos
-    
 ], personaPost)
+
 router.get('/mostrar',[
     validarJWT,
     validarCampos
 ],personaMostar)
+
 router.get('/login',personaLogin)
+
 router.delete('/delete',personaDelete)
 router.put('/:id',personaput)
 router.get('/buscar',[
@@ -37,11 +38,17 @@ router.put('/activar/:id',[
     check('id','id activo').not().isEmpty(),
     validarCampos
 ],personaActivar)
+
 router.put('/desactivar/:id',[
     check('id','ingrese id a desactivar').not().isEmpty(),
     validarCampos
 ],personaDesactivar)
 
-
+router.post('/upload/:id',[
+    validarJWT,
+    check('id', 'No es un ID válido').isMongoId(),
+    check('id').custom(helpersUsuarios.existeUsuarioById),
+    validarCampos
+],cargarImagen)
 
 export default router

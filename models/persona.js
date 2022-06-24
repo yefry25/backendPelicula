@@ -29,7 +29,7 @@ const personaSchema = new mongoose.Schema({
     alias:{
         type:String,
         maxLength:8,
-        default:"anonimo"
+        default:"anonymous"
             
     },
     foto:{
@@ -44,7 +44,6 @@ const personaSchema = new mongoose.Schema({
         type:Date,
         default:Date.now
     },
-    
 })
 
 export default mongoose.model('Persona',personaSchema)
